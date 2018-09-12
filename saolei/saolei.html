@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title></title>
+		<link rel="stylesheet" href="">
+		<style type="text/css">
+			*{margin:0;padding:0;}
+			#map_top{position:relative;margin:100px auto;width:288px;height:288px;}
+			/*#map_bottom{position:absolute;margin:100px 500px;width:288px;height:288px;}*/
+			.box_top{float:left;width:30px;height:30px;background:#999;border:1px solid #000;text-align:center;line-height:30px;}
+			.box_top:hover{background:#bbb;}
+			.changeeee{background:#eee;}
+			.changered{background:red;}
+			/*.box_bottom{float:left;width:30px;height:30px;background:#999;border:1px solid #000;}*/
+		</style>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				//创建一个9x9的地图，放置10个雷
+				for(var i=0;i<81;i++){
+					$("#map_top").append("<div class='box_top' onclick='down("+i+")'></div>");
+					// $("#map_bottom").append("<div class='box_bottom'></div>");
+				}
+				
+			});
+
+			var one = 1;//用来判断是不是第一次点击，1为第一次点击，2就不是
+			var bomb;//存放雷
+			var gameresult;//存放游戏结果
+
+			function down(id){
+				//判断周围有几个炸弹，获取id周围的9个数
+
+				$(".box_top").eq(id).addClass('changeeee');//点击后变成颜色变成#eee
+				if($(".changeeee").length == 71){
+					gameresult = "你赢了！";
+					alert(gameresult);
+				}
+				if(one==1){//判断是否是第一次点击，如果是就随机雷区，然后把点击改为2
+					bomb = getBomb(id);
+					one = 2;
+				}
+				for(var i in bomb){
+					if(bomb[i] == id){
+						$(".box_top").eq(id).removeClass('changeeee').html('炸');
+						for(var i in bomb){
+							$(".box_top").eq(bomb[i]).addClass('changered');
+						}
+						gameresult = "游戏结束！";
+						alert(gameresult);
+					}
+				}
+			}
+
+
+
+
+			function getAround(id){
+				var around = [];
+				
+			}
+
+
+			function getBomb(id){
+				var bombs = [];
+				//随机10个炸弹，不能与第一次点击位置相冲相冲
+				for(var i=0; i<10; i++){
+					var num = parseInt(Math.random()*81);
+					for (var j=0; j<bombs.length; j++) {
+						if(bombs[j]==num || id==num){
+							num = parseInt(Math.random()*81);
+							j = -1;
+						}
+					}
+					bombs.push(num);
+				}
+				return bombs;
+			}
+		</script>
+	</head>
+
+	<body>
+		<!-- 10个雷，9X9平铺 -->
+		<div id="map_top"></div>
+			
+		<!-- <div id="map_bottom"></div> -->
+
+		
+	</body>
+</html>
